@@ -1,0 +1,13 @@
+[package]
+name = "reboot-to-linux"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0"
+ext4 = "0.9"
+positioned-io = "0.2"
+system_shutdown = "3.0"
+thiserror = "1.0"
+winapi = { version = "0.3", features = [ "fileapi" ] }
+windows-drives = "0.5"
