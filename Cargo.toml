@@ -7,6 +7,7 @@ edition = "2021"
 anyhow = "1.0"
 ext4 = "0.9"
 positioned-io = "0.2"
+structopt = "0.3"
 system_shutdown = "3.0"
 thiserror = "1.0"
 winapi = { version = "0.3", features = [ "fileapi" ] }

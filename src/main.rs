@@ -5,6 +5,7 @@ use std::ptr::null_mut;
 use anyhow::Error as AnyhowError;
 use ext4::{Checksums, Options, SuperBlock};
 use positioned_io::ReadAt;
+use structopt::StructOpt;
 use thiserror::Error;
 use winapi::{
     ctypes::c_void,
@@ -22,6 +23,8 @@ use windows_drives::{
 };
 
 fn main() -> Result<(), Error> {
+    let args = Args::from_args();
+
     /* open the volume for reading */
     let volume = BufferedHarddiskVolume::open(VOLUME_NUM).map_err(Error::OpenVolume)?;
     let volume = VolumeReader::new(volume);
@@ -99,9 +102,26 @@ fn main() -> Result<(), Error> {
     volume.write(offset, &data[..])?;
 
     /* going down for reboot */
-    system_shutdown::reboot()?;
+    if !args.no_reboot {
+        if args.shutdown {
+            system_shutdown::shutdown()?;
+        } else {
+            system_shutdown::reboot()?;
+        }
+    }
 
     Ok(())
+}
+
+/* Args */
+
+#[derive(StructOpt)]
+struct Args {
+    #[structopt(short = "s", long = "shutdown")]
+    shutdown: bool,
+
+    #[structopt(short = "n", long = "no-reboot")]
+    no_reboot: bool,
 }
 
 /* VolumeReader */
